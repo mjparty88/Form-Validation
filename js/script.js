@@ -6,28 +6,20 @@ let nameField = document.getElementById('name');
 nameField.focus();
 
 /*Job Role section
-- assign the selection with job titles to jobRoleDropdown
-- create a text input element for the user to input their otherJobRole
-- create a lable for the jobRole text input
-- add placeholder text to the otherJobRole input
+- assign the selection with job titles to a variable named jobRoleDropdown
+- store the new input field and label (which have been directly added to HTML for non-obtrusive JS) to otherJobRole and otherJobRoleLabel
 - make the text input and label hidden by default
 - append the label and text input into the DOM at the end of the first fieldset
 */
 
+
+
 //create the element (i'm going to give it a label too)
 let jobRoleDropdown = document.getElementById("title")
-let otherJobRole = document.createElement("input")
-let otherJobRoleLabel = document.createElement("label")
-otherJobRole.setAttribute("type","text")
-otherJobRole.setAttribute("id","other-title")
-otherJobRole.setAttribute("name","otherJobRole")
-otherJobRole.setAttribute("placeholder","Your Job Role")
-otherJobRoleLabel.setAttribute('for', "other-title")
-otherJobRoleLabel.innerHTML = "Other Job Role"
+let otherJobRole = document.getElementById("other-title")
+let otherJobRoleLabel = document.getElementById("other-title-label")
 otherJobRole.style.display = "none"
 otherJobRoleLabel.style.display = "none"
-document.getElementsByTagName("form")[0].firstElementChild.append(otherJobRoleLabel)
-document.getElementsByTagName("form")[0].firstElementChild.append(otherJobRole)
 
 /* jobRoleDropdown event Listener
 - triggers on change of the jobRoleDropdown
@@ -350,7 +342,7 @@ function resetFormErrorMessages() {
     errorListName.style.display = "" //display the name validation error messages
   }
   if (!emailIsValid) {
-    errorListEmail.style.display = "" //display the email  validation error messages
+    errorListEmail.style.display = "" //display the email validation error messages
   }
   if (!activityIsSelected) {
     errorListActivity.style.display = "" //display the actvitiy validation error messages
@@ -361,11 +353,24 @@ function resetFormErrorMessages() {
 }
 
 /*
+conditionalFormErrorMessageReset()
+- this function has been created for inclusion in form element event handlers so that input into the form doesn't automatically show all errors
+- the conditionalFormErrorMessageReset() checks if the main errorParagraph is already displaying (due to a previous erroneous form submission)
+-then it resets the error messages
+*/
+
+function conditionalFormErrorMessageReset() {
+  if(errorParagraph.style.display == "") {
+    resetFormErrorMessages();
+  }
+}
+
+/*
 Name Validation Message Setup
 */
 
 let validationMessageName = document.createElement("span")
-validationMessageName.textContent = "Name must have alphabetical letters and at least one spaces"
+validationMessageName.textContent = "Name must have alphabetical letters, and we'd appreciate your full name"
 validationMessageName.style.display = "none"
 validationMessageName.style.color = "red"
 nameField.insertAdjacentElement("afterend",validationMessageName)
@@ -384,18 +389,18 @@ function validateNameField() {
     nameIsValid = false
     resetDefaultStyle(nameField)
     validationMessageName.style.display = "none"
-    resetFormErrorMessages()
+    conditionalFormErrorMessageReset()
   }
   else if(regex.test(nameField.value)) {
     nameIsValid = true
     resetDefaultStyle(nameField)
     validationMessageName.style.display = "none"
-    resetFormErrorMessages()
+    conditionalFormErrorMessageReset()
   } else {
     nameIsValid = false
     indicateError(nameField)
     validationMessageName.style.display = ""
-    resetFormErrorMessages()
+    conditionalFormErrorMessageReset()
   }
 }
 
@@ -425,12 +430,12 @@ function validateEmailField() {
     emailIsValid = false
     resetDefaultStyle(emailField)
     validationMessageEmail.style.display = "none"
-    resetFormErrorMessages()
+    conditionalFormErrorMessageReset()
   } else if(regex.test(emailField.value)) {
     emailIsValid = true
     resetDefaultStyle(emailField)
     validationMessageEmail.style.display = "none"
-    resetFormErrorMessages()
+    conditionalFormErrorMessageReset()
   } else {
     emailIsValid = false
     indicateError(emailField)
@@ -440,7 +445,7 @@ function validateEmailField() {
       validationMessageEmail.textContent = "Email requires an @ symbol"
     }
     validationMessageEmail.style.display = ""
-    resetFormErrorMessages()
+    conditionalFormErrorMessageReset()
   }
 }
 
@@ -451,7 +456,7 @@ Actvity Validation Message Setup
 let validationMessageActvities = document.createElement("span")
 let activityList = document.querySelector(".activities")
 validationMessageActvities.textContent = "You must select an activity"
-validationMessageActvities.style.display = ""
+validationMessageActvities.style.display = "none"
 validationMessageActvities.style.color = "red"
 activityList.appendChild(validationMessageActvities)
 
@@ -482,11 +487,11 @@ function validateActivites() {
  if (countSelectedActivites() > 0) {
    activityIsSelected = true
    validationMessageActvities.style.display = "none"
-   resetFormErrorMessages()
+   conditionalFormErrorMessageReset()
  } else {
    activityIsSelected = false
    validationMessageActvities.style.display = ""
-   resetFormErrorMessages()
+   conditionalFormErrorMessageReset()
  }
 }
 
@@ -516,19 +521,19 @@ function validateCard() {
     resetDefaultStyle(cardDiv.children[1])
     validationMessageCard.style.display = "none"
     validatePayment()
-    resetFormErrorMessages()
+    conditionalFormErrorMessageReset()
   } else if(regex.test(cardDiv.children[1].value)) {
     creditCardNumberIsValid = true
     resetDefaultStyle(cardDiv.children[1])
     validationMessageCard.style.display = "none"
     validatePayment() //validates payment against the other credit card variables
-    resetFormErrorMessages()
+    conditionalFormErrorMessageReset()
   } else {
     creditCardNumberIsValid = false
     indicateError(cardDiv.children[1])
     validationMessageCard.style.display = ""
     validatePayment()
-    resetFormErrorMessages()
+    conditionalFormErrorMessageReset()
   }
 }
 
@@ -558,19 +563,19 @@ function validateZip() {
     resetDefaultStyle(zipDiv.children[1])
     validationMessageZip.style.display = "none"
     validatePayment()
-    resetFormErrorMessages()
+    conditionalFormErrorMessageReset()
   } else if(regex.test(zipDiv.children[1].value)) {
     creditCardZipIsValid = true
     resetDefaultStyle(zipDiv.children[1])
     validationMessageZip.style.display = "none"
     validatePayment() //validates payment against the other credit card variables
-    resetFormErrorMessages()
+    conditionalFormErrorMessageReset()
   } else {
     creditCardZipIsValid = false
     indicateError(zipDiv.children[1])
     validationMessageZip.style.display = ""
     validatePayment()
-    resetFormErrorMessages()
+    conditionalFormErrorMessageReset()
   }
 }
 
@@ -600,19 +605,19 @@ function validateCvv() {
     resetDefaultStyle(cvvDiv.children[1])
     validationMessageCvv.style.display = "none"
     validatePayment()
-    resetFormErrorMessages()
+    conditionalFormErrorMessageReset()
   } else if(regex.test(cvvDiv.children[1].value)) {
     creditCardCvvIsValid = true
     resetDefaultStyle(cvvDiv.children[1])
     validationMessageCvv.style.display = "none"
     validatePayment() //validates payment against the other credit card variables
-    resetFormErrorMessages()
+    conditionalFormErrorMessageReset()
   } else {
     creditCardCvvIsValid = false
     indicateError(cvvDiv.children[1])
     validationMessageCvv.style.display = ""
     validatePayment()
-    resetFormErrorMessages()
+    conditionalFormErrorMessageReset()
   }
 }
 
@@ -628,15 +633,15 @@ function validatePayment() {
 
   if( paymentSelector.selectedIndex[1] && creditCardNumberIsValid && creditCardZipIsValid && creditCardCVVIsValid) {
     paymentIsValid = true // passes if credit card is selected and all credit card info is
-    resetFormErrorMessages()
+    conditionalFormErrorMessageReset()
   }
   else if(paymentSelector.selectedIndex == 2 || paymentSelector.selectedIndex == 3) {
     paymentIsValid = true // passes if either of the other payment options are selected
-    resetFormErrorMessages()
+    conditionalFormErrorMessageReset()
   }
   else {
     paymentIsValid = false // fails in all other conditions
-    resetFormErrorMessages()
+    conditionalFormErrorMessageReset()
   }
 }
 
