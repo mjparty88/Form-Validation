@@ -218,6 +218,7 @@ function updateRunningTotal() {
 
 paymentSelector = document.getElementById("payment")
 paymentSelector.firstElementChild.disabled = true;
+paymentSelector.selectedIndex = 1;
 document.getElementById("paypal").style.display = "none"
 document.getElementById("bitcoin").style.display = "none"
 
